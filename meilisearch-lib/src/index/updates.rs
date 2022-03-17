@@ -37,6 +37,14 @@ pub struct Checked;
 #[derive(Clone, Default, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Unchecked;
 
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[serde(deny_unknown_fields)]
+#[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(proptest_derive::Arbitrary))]
+pub struct TypoSettings {
+    #[cfg_attr(test, proptest(strategy = "test::setting_strategy()"))]
+    pub enabled: Setting<bool>,
+}
 /// Holds all the settings for an index. `T` can either be `Checked` if they represents settings
 /// whose validity is guaranteed, or `Unchecked` if they need to be validated. In the later case, a
 /// call to `check` will return a `Settings<Checked>` from a `Settings<Unchecked>`.
@@ -80,6 +88,9 @@ pub struct Settings<T> {
     #[serde(default, skip_serializing_if = "Setting::is_not_set")]
     #[cfg_attr(test, proptest(strategy = "test::setting_strategy()"))]
     pub distinct_attribute: Setting<String>,
+    #[serde(default, skip_serializing_if = "Setting::is_not_set")]
+    #[cfg_attr(test, proptest(strategy = "test::setting_strategy()"))]
+    pub typo: Setting<TypoSettings>,
 
     #[serde(skip)]
     pub _kind: PhantomData<T>,
@@ -96,6 +107,7 @@ impl Settings<Checked> {
             stop_words: Setting::Reset,
             synonyms: Setting::Reset,
             distinct_attribute: Setting::Reset,
+            typo: Setting::Reset,
             _kind: PhantomData,
         }
     }
@@ -110,6 +122,7 @@ impl Settings<Checked> {
             stop_words,
             synonyms,
             distinct_attribute,
+            typo: typo_tolerance,
             ..
         } = self;
 
@@ -122,6 +135,7 @@ impl Settings<Checked> {
             stop_words,
             synonyms,
             distinct_attribute,
+            typo: typo_tolerance,
             _kind: PhantomData,
         }
     }
@@ -160,6 +174,7 @@ impl Settings<Unchecked> {
             stop_words: self.stop_words,
             synonyms: self.synonyms,
             distinct_attribute: self.distinct_attribute,
+            typo: self.typo,
             _kind: PhantomData,
         }
     }
@@ -334,6 +349,19 @@ pub fn apply_settings_to_builder(
         Setting::Reset => builder.reset_distinct_field(),
         Setting::NotSet => (),
     }
+
+    match settings.typo {
+        Setting::Set(ref value) => match value.enabled {
+            Setting::Set(val) => builder.set_autorize_typos(val),
+            Setting::Reset => builder.reset_authorize_typos(),
+            Setting::NotSet => (),
+        },
+        Setting::Reset => {
+            // all typo settings need to be reset here.
+            builder.reset_authorize_typos();
+        }
+        Setting::NotSet => (),
+    }
 }
 
 #[cfg(test)]
@@ -362,6 +390,7 @@ pub(crate) mod test {
             stop_words: Setting::NotSet,
             synonyms: Setting::NotSet,
             distinct_attribute: Setting::NotSet,
+            typo: Setting::NotSet,
             _kind: PhantomData::<Unchecked>,
         };
 
@@ -383,6 +412,7 @@ pub(crate) mod test {
             stop_words: Setting::NotSet,
             synonyms: Setting::NotSet,
             distinct_attribute: Setting::NotSet,
+            typo: Setting::NotSet,
             _kind: PhantomData::<Unchecked>,
         };
 
