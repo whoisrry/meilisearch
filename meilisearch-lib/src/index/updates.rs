@@ -37,13 +37,26 @@ pub struct Checked;
 #[derive(Clone, Default, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Unchecked;
 
+#[cfg_attr(test, derive(proptest_derive::Arbitrary))]
 #[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "camelCase")]
+pub struct MinWordLenTypoSetting {
+    #[cfg_attr(test, proptest(strategy = "test::setting_strategy()"))]
+    pub one_typo: Setting<u8>,
+    #[cfg_attr(test, proptest(strategy = "test::setting_strategy()"))]
+    pub two_typos: Setting<u8>,
+}
+
 #[cfg_attr(test, derive(proptest_derive::Arbitrary))]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[serde(deny_unknown_fields)]
+#[serde(rename_all = "camelCase")]
 pub struct TypoSettings {
     #[cfg_attr(test, proptest(strategy = "test::setting_strategy()"))]
     pub enabled: Setting<bool>,
+    #[cfg_attr(test, proptest(strategy = "test::setting_strategy()"))]
+    pub min_word_lenth_for_typo: Setting<MinWordLenTypoSetting>,
 }
 /// Holds all the settings for an index. `T` can either be `Checked` if they represents settings
 /// whose validity is guaranteed, or `Unchecked` if they need to be validated. In the later case, a
@@ -351,11 +364,32 @@ pub fn apply_settings_to_builder(
     }
 
     match settings.typo {
-        Setting::Set(ref value) => match value.enabled {
-            Setting::Set(val) => builder.set_autorize_typos(val),
-            Setting::Reset => builder.reset_authorize_typos(),
-            Setting::NotSet => (),
-        },
+        Setting::Set(ref value) => {
+            match value.enabled {
+                Setting::Set(val) => builder.set_autorize_typos(val),
+                Setting::Reset => builder.reset_authorize_typos(),
+                Setting::NotSet => (),
+            }
+            match value.min_word_lenth_for_typo {
+                Setting::Set(ref setting) => {
+                    match setting.one_typo {
+                        Setting::Set(val) => builder.set_min_1_typo_word_len(val),
+                        Setting::Reset => builder.reset_min_1_typos_word_len(),
+                        Setting::NotSet => (),
+                    }
+                    match setting.two_typos {
+                        Setting::Set(val) => builder.set_min_2_typos_word_len(val),
+                        Setting::Reset => builder.reset_min_2_typos_word_len(),
+                        Setting::NotSet => (),
+                    }
+                }
+                Setting::Reset => {
+                    builder.reset_min_2_typos_word_len();
+                    builder.reset_min_1_typos_word_len();
+                }
+                Setting::NotSet => (),
+            }
+        }
         Setting::Reset => {
             // all typo settings need to be reset here.
             builder.reset_authorize_typos();
