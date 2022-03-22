@@ -5,6 +5,7 @@ use std::ops::Deref;
 use std::path::Path;
 use std::sync::Arc;
 
+use fst::IntoStreamer;
 use milli::heed::{EnvOpenOptions, RoTxn};
 use milli::update::{IndexerConfig, Setting};
 use milli::{obkv_to_json, FieldDistribution, FieldId};
@@ -173,9 +174,18 @@ impl Index {
             one_typo: Setting::Set(self.min_word_len_1_typo(txn)?),
             two_typos: Setting::Set(self.min_word_len_2_typo(txn)?),
         };
+
+        let disabled_words = self
+            .exact_words(txn)?
+            .into_stream()
+            .into_strs()?
+            .into_iter()
+            .collect();
+
         let typo_tolerance = TypoSettings {
             enabled: Setting::Set(self.authorize_typos(txn)?),
             min_word_lenth_for_typo: Setting::Set(min_typo_word_len),
+            disabled_words: Setting::Set(disabled_words),
         };
 
         Ok(Settings {

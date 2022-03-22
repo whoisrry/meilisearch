@@ -57,6 +57,8 @@ pub struct TypoSettings {
     pub enabled: Setting<bool>,
     #[cfg_attr(test, proptest(strategy = "test::setting_strategy()"))]
     pub min_word_lenth_for_typo: Setting<MinWordLenTypoSetting>,
+    #[cfg_attr(test, proptest(strategy = "test::setting_strategy()"))]
+    pub disabled_words: Setting<BTreeSet<String>>,
 }
 /// Holds all the settings for an index. `T` can either be `Checked` if they represents settings
 /// whose validity is guaranteed, or `Unchecked` if they need to be validated. In the later case, a
@@ -387,6 +389,13 @@ pub fn apply_settings_to_builder(
                     builder.reset_min_2_typos_word_len();
                     builder.reset_min_1_typos_word_len();
                 }
+                Setting::NotSet => (),
+            }
+            match value.disabled_words {
+                Setting::Set(ref words) => {
+                    builder.set_exact_words(words.clone());
+                }
+                Setting::Reset => builder.reset_exact_words(),
                 Setting::NotSet => (),
             }
         }

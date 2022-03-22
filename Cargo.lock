@@ -1092,7 +1092,7 @@ dependencies = [
 [[package]]
 name = "filter-parser"
 version = "0.1.0"
-source = "git+https://github.com/meilisearch/milli.git?rev=32de80eeef7798b24c98cdb8aa70b34dfaaea119#32de80eeef7798b24c98cdb8aa70b34dfaaea119"
+source = "git+https://github.com/meilisearch/milli.git?rev=069d560#069d560f668fabb79caedf442ca27ae2e6682fae"
 dependencies = [
  "nom 7.1.1",
  "nom_locate",
@@ -2060,7 +2060,7 @@ dependencies = [
  "log",
  "meilisearch-auth",
  "meilisearch-error",
- "milli 0.23.1 (git+https://github.com/meilisearch/milli.git?rev=32de80eeef7798b24c98cdb8aa70b34dfaaea119)",
+ "milli 0.23.1 (git+https://github.com/meilisearch/milli.git?rev=069d560)",
  "mime",
  "mockall",
  "nelson",
@@ -2178,7 +2178,7 @@ dependencies = [
 [[package]]
 name = "milli"
 version = "0.23.1"
-source = "git+https://github.com/meilisearch/milli.git?rev=32de80eeef7798b24c98cdb8aa70b34dfaaea119#32de80eeef7798b24c98cdb8aa70b34dfaaea119"
+source = "git+https://github.com/meilisearch/milli.git?rev=069d560#069d560f668fabb79caedf442ca27ae2e6682fae"
 dependencies = [
  "bimap",
  "bincode",
@@ -2188,7 +2188,7 @@ dependencies = [
  "crossbeam-channel",
  "csv",
  "either",
- "filter-parser 0.1.0 (git+https://github.com/meilisearch/milli.git?rev=32de80eeef7798b24c98cdb8aa70b34dfaaea119)",
+ "filter-parser 0.1.0 (git+https://github.com/meilisearch/milli.git?rev=069d560)",
  "fst",
  "fxhash",
  "geoutils",
