@@ -1029,7 +1029,6 @@ dependencies = [
 [[package]]
 name = "filter-parser"
 version = "0.1.0"
-source = "git+https://github.com/meilisearch/milli.git?tag=v0.24.1#e10c26e70da3a1735db452d54877da39e09d8b1a"
 dependencies = [
  "nom",
  "nom_locate",
@@ -1051,6 +1050,15 @@ dependencies = [
  "crc32fast",
  "libc",
  "miniz_oxide",
+]
+
+[[package]]
+name = "flatten-serde-json"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6cdad763dbe1a3a9298e89667509ad36ece8a9ed22edd132ac8a45405863e5e9"
+dependencies = [
+ "serde_json",
 ]
 
 [[package]]
@@ -2081,8 +2089,7 @@ dependencies = [
 
 [[package]]
 name = "milli"
-version = "0.24.1"
-source = "git+https://github.com/meilisearch/milli.git?tag=v0.24.1#e10c26e70da3a1735db452d54877da39e09d8b1a"
+version = "0.23.1"
 dependencies = [
  "bimap",
  "bincode",
@@ -2093,6 +2100,8 @@ dependencies = [
  "csv",
  "either",
  "filter-parser",
+ "flatten-serde-json",
+ "fnv",
  "fst",
  "fxhash",
  "geoutils",
