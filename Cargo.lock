@@ -2023,6 +2023,7 @@ dependencies = [
  "once_cell",
  "parking_lot",
  "paste",
+ "permissive-json-pointer",
  "proptest",
  "proptest-derive",
  "rand",
@@ -2414,6 +2415,15 @@ name = "percent-encoding"
 version = "2.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d4fd5641d01c8f18a23da7b6fe29298ff4b55afcccdf78973b24cf3175fee32e"
+
+[[package]]
+name = "permissive-json-pointer"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "385a7863da69d1360086a6ce149f88b60d2b1b50d8222b2a87ac680bc9438970"
+dependencies = [
+ "serde_json",
+]
 
 [[package]]
 name = "phf"

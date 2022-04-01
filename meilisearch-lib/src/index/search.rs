@@ -436,22 +436,35 @@ fn make_document(
     field_ids_map: &FieldsIdsMap,
     obkv: obkv::KvReaderU16,
 ) -> Result<Document> {
-    let mut document = Document::new();
+    let mut document = serde_json::Map::new();
 
-    for attr in attributes_to_retrieve {
-        if let Some(value) = obkv.get(*attr) {
-            let value = serde_json::from_slice(value)?;
+    // recreate the original json
+    for (key, value) in obkv.iter() {
+        let value = serde_json::from_slice(value)?;
+        let key = field_ids_map
+            .name(key)
+            .expect("Missing field name")
+            .to_string();
 
-            // This unwrap must be safe since we got the ids from the fields_ids_map just
-            // before.
-            let key = field_ids_map
-                .name(*attr)
-                .expect("Missing field name")
-                .to_string();
-
-            document.insert(key, value);
-        }
+        document.insert(key, value);
     }
+
+    // select the attributes to retrieve
+    let attributes_to_retrieve = attributes_to_retrieve
+        .iter()
+        .map(|&fid| {
+            field_ids_map
+                .name(fid)
+                .expect("Missing field name")
+                .to_string()
+        })
+        .collect();
+
+    let document = permissive_json_pointer::select_values(&document.into(), attributes_to_retrieve);
+
+    // then we need to convert the `serde_json::Map` into an `IndexMap`.
+    let document = document.into_iter().collect();
+
     Ok(document)
 }
 

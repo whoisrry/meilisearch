@@ -265,5 +265,5 @@ async fn displayed_attributes() {
         .search_post(json!({ "attributesToRetrieve": ["title", "id"] }))
         .await;
     assert_eq!(code, 200, "{}", response);
-    assert!(response["hits"].get("title").is_none());
+    assert!(response["hits"][0].get("title").is_some());
 }
