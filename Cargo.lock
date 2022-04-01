@@ -1035,6 +1035,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "filter-parser"
+version = "0.1.0"
+source = "git+https://github.com/meilisearch/milli.git?branch=nested_fields#529505125ad6919693a67b515c37039c942f257c"
+dependencies = [
+ "nom",
+ "nom_locate",
+]
+
+[[package]]
 name = "firestorm"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1893,7 +1902,7 @@ version = "0.26.0"
 dependencies = [
  "enum-iterator",
  "meilisearch-error",
- "milli",
+ "milli 0.23.1",
  "rand",
  "serde",
  "serde_json",
@@ -2014,7 +2023,7 @@ dependencies = [
  "log",
  "meilisearch-auth",
  "meilisearch-error",
- "milli",
+ "milli 0.23.1 (git+https://github.com/meilisearch/milli.git?branch=nested_fields)",
  "mime",
  "mockall",
  "nelson",
@@ -2100,7 +2109,50 @@ dependencies = [
  "crossbeam-channel",
  "csv",
  "either",
- "filter-parser",
+ "filter-parser 0.1.0",
+ "flatten-serde-json",
+ "fnv",
+ "fst",
+ "fxhash",
+ "geoutils",
+ "grenad",
+ "heed",
+ "itertools",
+ "levenshtein_automata",
+ "log",
+ "logging_timer",
+ "meilisearch-tokenizer",
+ "memmap2",
+ "obkv",
+ "once_cell",
+ "ordered-float",
+ "rayon",
+ "roaring",
+ "rstar",
+ "serde",
+ "serde_json",
+ "slice-group-by",
+ "smallstr",
+ "smallvec",
+ "tempfile",
+ "time 0.3.9",
+ "uuid",
+]
+
+[[package]]
+name = "milli"
+version = "0.23.1"
+source = "git+https://github.com/meilisearch/milli.git?branch=nested_fields#529505125ad6919693a67b515c37039c942f257c"
+dependencies = [
+ "bimap",
+ "bincode",
+ "bstr",
+ "byteorder",
+ "concat-arrays",
+ "crossbeam-channel",
+ "csv",
+ "either",
+ "filter-parser 0.1.0 (git+https://github.com/meilisearch/milli.git?branch=nested_fields)",
  "flatten-serde-json",
  "fnv",
  "fst",
@@ -2418,9 +2470,9 @@ checksum = "d4fd5641d01c8f18a23da7b6fe29298ff4b55afcccdf78973b24cf3175fee32e"
 
 [[package]]
 name = "permissive-json-pointer"
-version = "0.1.1"
+version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "385a7863da69d1360086a6ce149f88b60d2b1b50d8222b2a87ac680bc9438970"
+checksum = "27527fc908de6a7ae5b715a8a415d8cf9ebdf690337706eee63bafb49aceaba1"
 dependencies = [
  "serde_json",
 ]
